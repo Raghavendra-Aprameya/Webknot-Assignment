@@ -1,0 +1,42 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Event {
+  event_id   Int     @id @default(autoincrement())
+  name       String
+  description String?
+  location   String?
+  date       DateTime @db.Date
+  createdAt  DateTime @default(now())
+  tasks      Task[]   
+}
+
+enum TaskStatus {
+  Pending
+  Completed
+}
+
+model Attendee {
+  attendee_id Int       @id @default(autoincrement())
+  name        String
+  tasks       Task[]   
+}
+
+
+model Task {
+  task_id     Int       @id @default(autoincrement())
+  name        String
+  deadline    DateTime  @db.Date
+  status      TaskStatus @default(Pending)
+  attendee_id Int?    
+  attendee    Attendee? @relation(fields: [attendee_id], references: [attendee_id])
+  event_id    Int?    
+  event       Event?    @relation(fields: [event_id], references: [event_id])
+  //display(boolean)
+}
