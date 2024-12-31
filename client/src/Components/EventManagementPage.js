@@ -24,7 +24,6 @@ export default function EventManagement() {
     date: "",
   });
 
-  // Fetch events from API
   useEffect(() => {
     const getEvents = async () => {
       try {
@@ -39,26 +38,22 @@ export default function EventManagement() {
     getEvents();
   }, []);
 
-  // Get events for a specific day
   const getEventsByDate = (date) => {
     return events.filter(
       (event) => new Date(event.date).toDateString() === date.toDateString()
     );
   };
 
-  // Generate days for the calendar
   const generateCalendarDays = (month) => {
     const start = startOfMonth(month);
     const end = endOfMonth(month);
     return eachDayOfInterval({ start, end });
   };
 
-  // Handle day click
   const handleDayClick = (date) => {
     setSelectedDate(date);
   };
 
-  // Get highlighted days based on event dates
   const highlightedDays = events.map((event) =>
     new Date(event.date).toDateString()
   );
@@ -70,18 +65,16 @@ export default function EventManagement() {
       );
       if (response.data.success) {
         console.log("Data deleted successfully");
-        // Refetch events
         const updatedEvents = await axios.get(
           "http://localhost:8000/api/v1/event"
         );
-        setEvents(updatedEvents.data.data); // Update state with the latest events
+        setEvents(updatedEvents.data.data);
       }
     } catch (error) {
       console.error("Error deleting event:", error);
     }
   };
 
-  // Add new event
   const addNewEvent = async () => {
     try {
       if (
@@ -129,15 +122,18 @@ export default function EventManagement() {
 
   const handleUpdateEvent = async (event_id) => {
     try {
+      const updatedEventData = { ...updateEvent, event_id };
+
       const response = await axios.patch(
         `http://localhost:8000/api/v1/event/${event_id}`,
-        updateEvent
+        updatedEventData
       );
+
       if (response.data.success) {
         setEvents((prevEvents) =>
           prevEvents.map((event) =>
-            event.event_id === updateEvent.event_id
-              ? { ...event, ...updateEvent }
+            event.event_id === event_id
+              ? { ...event, ...updatedEventData }
               : event
           )
         );
@@ -158,7 +154,6 @@ export default function EventManagement() {
     <div className="p-4">
       <h1 className="text-xl font-bold mb-4">Event Calendar</h1>
 
-      {/* Calendar Controls */}
       <div className="mb-4 flex justify-between items-center flex-wrap">
         <button
           className="px-3 py-1 bg-gray-300 rounded mb-2 sm:mb-0"
@@ -185,7 +180,6 @@ export default function EventManagement() {
         </button>
       </div>
 
-      {/* Calendar Grid */}
       <div className="grid grid-cols-7 gap-2">
         {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day, index) => (
           <div key={index} className="text-center font-semibold">
@@ -211,7 +205,6 @@ export default function EventManagement() {
         })}
       </div>
 
-      {/* Event Details for Selected Day */}
       {selectedDate && (
         <div className="mt-4">
           <h2 className="text-lg font-semibold">
@@ -237,9 +230,7 @@ export default function EventManagement() {
                 </Link>
                 <button
                   className="p-3 bg-blue-700 rounded-xl mt-2 text-white ml-4"
-                  onClick={() => {
-                    deleteEvent(event.event_id);
-                  }}
+                  onClick={() => deleteEvent(event.event_id)}
                 >
                   Delete Event
                 </button>
@@ -260,7 +251,6 @@ export default function EventManagement() {
         </div>
       )}
 
-      {/* Add Event Button */}
       <button
         className="p-4 bg-blue-700 rounded-xl mt-4 text-white"
         onClick={() => setIsOpen(true)}
@@ -268,7 +258,6 @@ export default function EventManagement() {
         Add Event
       </button>
 
-      {/* Add Event Modal */}
       <Modal show={isOpen} onHide={() => setIsOpen(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Add Event</Modal.Title>
@@ -322,6 +311,59 @@ export default function EventManagement() {
         </Modal.Body>
         <Modal.Footer>
           <Button onClick={addNewEvent}>Add Event</Button>
+        </Modal.Footer>
+      </Modal>
+
+      <Modal show={isUpdateOpen} onHide={() => setIsUpdateOpen(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Update Event</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div>
+            <label>Enter Event Name:</label>
+            <input
+              type="text"
+              value={updateEvent.name}
+              onChange={(e) => handleUpdateEventChange("name", e.target.value)}
+              className="w-full mb-2 p-2 border"
+            />
+          </div>
+          <div>
+            <label>Enter Description:</label>
+            <input
+              type="text"
+              value={updateEvent.description}
+              onChange={(e) =>
+                handleUpdateEventChange("description", e.target.value)
+              }
+              className="w-full mb-2 p-2 border"
+            />
+          </div>
+          <div>
+            <label>Enter Location:</label>
+            <input
+              type="text"
+              value={updateEvent.location}
+              onChange={(e) =>
+                handleUpdateEventChange("location", e.target.value)
+              }
+              className="w-full mb-2 p-2 border"
+            />
+          </div>
+          <div>
+            <label>Enter Date:</label>
+            <input
+              type="date"
+              value={updateEvent.date}
+              onChange={(e) => handleUpdateEventChange("date", e.target.value)}
+              className="w-full mb-2 p-2 border"
+            />
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button onClick={() => handleUpdateEvent(updateEvent.event_id)}>
+            Save
+          </Button>
         </Modal.Footer>
       </Modal>
 
