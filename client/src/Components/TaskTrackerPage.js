@@ -39,7 +39,10 @@
 //         setTasks((prevTasks) =>
 //           prevTasks.map((task) =>
 //             task.task_id === task_id
-//               ? { ...task, status: response.data.status }
+//               ? {
+//                   ...task,
+//                   status: task.status === "Pending" ? "Completed" : "Pending",
+//                 }
 //               : task
 //           )
 //         );
@@ -87,15 +90,29 @@
 //               <p>Deadline: {new Date(task.deadline).toLocaleDateString()}</p>
 //               <p>Attendee: {task.attendee_id}</p>
 //               <p>Status: {task.status}</p>
+
+//               {/* Progress Bar */}
+//               <div className="mt-4">
+//                 <div className="w-full bg-gray-200 rounded h-4">
+//                   <div
+//                     className={`h-4 rounded ${
+//                       task.status === "Completed"
+//                         ? "bg-green-500"
+//                         : "bg-yellow-500"
+//                     }`}
+//                     style={{
+//                       width: task.status === "Completed" ? "100%" : "50%",
+//                     }}
+//                   ></div>
+//                 </div>
+//               </div>
+
 //               <button
 //                 onClick={() => updateStatus(task.task_id)}
 //                 className="bg-blue-500 text-white px-4 py-2 rounded mt-4"
 //               >
 //                 Update Status
 //               </button>
-//               {/* <button className="bg-blue-500 text-white px-4 py-2 rounded mt-4 ml-4">
-//                 Delete
-//               </button> */}
 //             </div>
 //           ))}
 //         </div>
@@ -257,7 +274,7 @@ export default function TaskTrackerPage() {
         Add Task
       </button>
       {tasks.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-4">
           {tasks.map((task) => (
             <div
               key={task.task_id}
