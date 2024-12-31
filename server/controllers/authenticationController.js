@@ -174,37 +174,45 @@ const otpVerification = async (req, res) => {
         .json({ success: true, message: "OTP is correct", data: user });
     }
   } catch (err) {
-    res.status(500).json({ success: false, message: "Unexpected Error" });
+    res
+      .status(500)
+      .json({ success: false, message: JSON.stringify(err), err: err });
   }
 };
 
 const changePassword = async (req, res) => {
   try {
+    const token = req.cookies.token; // Retrieve token from cookies
+    if (!token) {
+      return res
+        .status(401)
+        .json({ success: false, message: "Unauthorized access" });
+    }
+
+    const decoded = jwt.verify(token, process.env.PRIVACY_KEY); // Decode token
+    const userid = decoded.userid; // Extract user ID from payload
+
     const result = changePasswordSchema.safeParse(req.body);
     if (result.success) {
       const hashedPassword = await bcrypt.hash(result.data.password, 10);
-      const data = await prisma.user.update({
-        where: {
-          userid: result.data.userid,
-        },
-        data: {
-          password: hashedPassword,
-        },
+      await prisma.user.update({
+        where: { userid },
+        data: { password: hashedPassword },
       });
-      res.status(200).json({
-        success: true,
-        message: "Password changed successfully",
-      });
+      res
+        .status(200)
+        .json({ success: true, message: "Password changed successfully" });
     } else {
       res.status(400).json({
         success: false,
-        message: result.error.errors.map((error) => {
-          return { message: error.message, path: error.path };
-        }),
+        message: result.error.errors.map((error) => ({
+          message: error.message,
+          path: error.path,
+        })),
       });
     }
   } catch (err) {
-    res.status(500).json({ success: false, message: "Unexpected Error" });
+    res.status(500).json({ success: false, message: "Unexpected error", err });
   }
 };
 
