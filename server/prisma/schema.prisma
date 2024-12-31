@@ -37,6 +37,28 @@ model Task {
   attendee_id Int?    
   attendee    Attendee? @relation(fields: [attendee_id], references: [attendee_id])
   event_id    Int?    
-  event       Event?    @relation(fields: [event_id], references: [event_id])
+  event       Event?    @relation(fields: [event_id], references: [event_id],onDelete: Cascade)
   //display(boolean)
+}
+
+
+model User{
+
+  userid Int @id @default(autoincrement())
+  Firstname String
+  LastName String?
+  email String @unique
+  password String
+  phone String @unique
+  role String? @default("user")
+  verified Boolean? @default(false)
+  OTP OTP[]
+}
+model OTP{
+  id Int @id @default(autoincrement())
+  otp Int 
+  userid Int 
+  user User @relation(fields: [userid], references: [userid])
+  createdAt DateTime @default(now())
+
 }
