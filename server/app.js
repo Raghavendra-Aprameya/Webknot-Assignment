@@ -15,14 +15,6 @@ app.use(
 app.use(cookieParser());
 app.use(express.json());
 
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-
-  res.status(500).json({
-    success: false,
-    message: "An unexpected error occurred. Please try again later.",
-  });
-});
 const taskRoute = require("./routes/taskRouter");
 app.use("/api/v1/task", taskRoute);
 
@@ -35,5 +27,16 @@ app.use("/api/v1/attendee", attendeeRoute);
 const userRoutes = require("./routes/userRouter");
 
 app.use("/api/v1/users", userRoutes);
+app.get("/", (req, res) => {
+  res.send("hdsh");
+});
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+
+  res.status(500).json({
+    success: false,
+    message: "An unexpected error occurred. Please try again later.",
+  });
+});
 
 module.exports = app;
