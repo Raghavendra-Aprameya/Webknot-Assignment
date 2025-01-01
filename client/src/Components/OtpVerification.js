@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+const serverUrl = process.env.REACT_APP_SERVER_URL;
 
 const OtpVerification = () => {
   const [otp, setOtp] = useState("");
@@ -14,7 +15,7 @@ const OtpVerification = () => {
     try {
       console.log(otp);
       const response = await axios.post(
-        "http://localhost:8000/api/v1/users/otpVerification",
+        `${serverUrl}/api/v1/users/otpVerification`,
         {
           otp: Number(otp),
         }

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import axios from "axios";
 import { Modal, Button } from "react-bootstrap";
+const serverUrl = process.env.REACT_APP_SERVER_URL;
 
 export default function TaskTrackerPage() {
   const { event_id, event_name } = useParams();
@@ -18,7 +19,7 @@ export default function TaskTrackerPage() {
       try {
         setLoading(true); // Start loading
         const response = await axios.get(
-          `http://localhost:8000/api/v1/task/${event_id}`
+          `${serverUrl}/api/v1/task/${event_id}`
         );
         if (response.data.success) {
           setTasks(response.data.data);
@@ -35,7 +36,7 @@ export default function TaskTrackerPage() {
 
   const updateStatus = async (task_id) => {
     try {
-      const response = await axios.patch(`http://localhost:8000/api/v1/task/`, {
+      const response = await axios.patch(`${serverUrl}/api/v1/task/`, {
         task_id: task_id,
       });
       if (response.data.success) {
@@ -57,7 +58,7 @@ export default function TaskTrackerPage() {
 
   const addTask = async (newTask) => {
     try {
-      const response = await axios.post("http://localhost:8000/api/v1/task/", {
+      const response = await axios.post(`${serverUrl}/api/v1/task/`, {
         ...newTask,
         event_id: Number(event_id),
         attendee_id: Number(newTask.attendee_id),

@@ -3,6 +3,7 @@ import axios from "axios";
 import { format, startOfMonth, endOfMonth, eachDayOfInterval } from "date-fns";
 import { Link, useNavigate } from "react-router-dom";
 import { Modal, Button } from "react-bootstrap";
+const serverUrl = process.env.REACT_APP_SERVER_URL;
 
 export default function EventManagement() {
   const [events, setEvents] = useState([]);
@@ -29,8 +30,8 @@ export default function EventManagement() {
   useEffect(() => {
     const getEvents = async () => {
       try {
-        setLoading(true); // Start loading
-        const response = await axios.get("http://localhost:8000/api/v1/event");
+        setLoading(true);
+        const response = await axios.get(`${serverUrl}/api/v1/event`);
         const fetchedEvents = response.data?.data || [];
         setEvents(fetchedEvents);
       } catch (error) {
@@ -66,13 +67,11 @@ export default function EventManagement() {
   const deleteEvent = async (event_id) => {
     try {
       const response = await axios.delete(
-        `http://localhost:8000/api/v1/event/${Number(event_id)}`
+        `${serverUrl}/api/v1/event/${Number(event_id)}`
       );
       if (response.data.success) {
         console.log("Data deleted successfully");
-        const updatedEvents = await axios.get(
-          "http://localhost:8000/api/v1/event"
-        );
+        const updatedEvents = await axios.get(`${serverUrl}/api/v1/event`);
         setEvents(updatedEvents.data.data);
       }
     } catch (error) {
@@ -92,7 +91,7 @@ export default function EventManagement() {
         return;
       }
 
-      const response = await axios.post("http://localhost:8000/api/v1/event/", {
+      const response = await axios.post(`${serverUrl}0/api/v1/event/`, {
         name: addEvent.name,
         description: addEvent.description,
         location: addEvent.location,
@@ -130,7 +129,7 @@ export default function EventManagement() {
       const updatedEventData = { ...updateEvent, event_id };
 
       const response = await axios.patch(
-        `http://localhost:8000/api/v1/event/${event_id}`,
+        `${serverUrl}/api/v1/event/${event_id}`,
         updatedEventData
       );
 
@@ -157,12 +156,9 @@ export default function EventManagement() {
 
   const handleLogout = async () => {
     try {
-      const response = await axios.get(
-        "http://localhost:8000/api/v1/users/logout",
-        {
-          withCredentials: true,
-        }
-      );
+      const response = await axios.get(`${serverUrl}/api/v1/users/logout`, {
+        withCredentials: true,
+      });
 
       if (response.data.success) {
         alert(response.data.message);
