@@ -4,7 +4,7 @@ const {
   getTask,
   addTask,
   updateTaskStatus,
-} = require("../controllers/taskController");
+} = require("../controllers/taskController.js");
 const router = express.Router();
 
 router.get("/:id", getTask);

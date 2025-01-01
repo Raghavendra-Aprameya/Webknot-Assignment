@@ -7,7 +7,7 @@ const {
   otpVerification,
   forgotPassword,
   changePassword,
-} = require("../controllers/authenticationController");
+} = require("../controllers/authenticationController.js");
 const router = express.Router();
 router.post("/signin", signin);
 router.post("/signup", signup);

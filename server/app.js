@@ -23,16 +23,16 @@ app.get("/", (req, res) => {
   res.send("Server Check");
 });
 
-const taskRoute = require("./routes/taskRouter");
+const taskRoute = require("./routes/taskRouter.js");
 app.use("/api/v1/task", taskRoute);
 
-const eventRoute = require("./routes/eventRouter");
+const eventRoute = require("./routes/eventRouter.js");
 app.use("/api/v1/event", eventRoute);
 
-const attendeeRoute = require("./routes/attendeeRouter");
+const attendeeRoute = require("./routes/attendeeRouter.js");
 app.use("/api/v1/attendee", attendeeRoute);
 
-const userRoutes = require("./routes/userRouter");
+const userRoutes = require("./routes/userRouter.js");
 
 app.use("/api/v1/users", userRoutes);
 

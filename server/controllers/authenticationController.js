@@ -1,7 +1,7 @@
 const { PrismaClient } = require("@prisma/client");
 const z = require("zod");
 const bcrypt = require("bcrypt");
-const { transporter } = require("../utils/nodemailer");
+const { transporter } = require("../utils/nodemailer.js");
 const jwt = require("jsonwebtoken");
 
 const prisma = new PrismaClient();
