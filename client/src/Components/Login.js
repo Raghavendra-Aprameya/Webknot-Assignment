@@ -7,15 +7,16 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
+  const serverUrl = process.env.REACT_APP_SERVER_URL;
 
   const handleLogin = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await axios.post(
-        "http://localhost:8000/api/v1/users/signin",
-        { email, password }
-      );
+      const response = await axios.post(`${serverUrl}/api/v1/users/signin`, {
+        email,
+        password,
+      });
       if (response.data.success) {
         setMessage("Login Successful");
         navigate("/landing");
@@ -97,15 +98,15 @@ const Login = () => {
             Sign up
           </Link>
         </p>
-        <p className="mt-2 text-sm text-center text-gray-600">
+        {/* <p className="mt-2 text-sm text-center text-gray-600">
           Forgot your password?{" "}
           <Link
             to="/forgot-password"
             className="text-blue-500 hover:underline focus:outline-none"
           >
             Reset it here
-          </Link>
-        </p>
+          </Link> */}
+        {/* </p> */}
       </div>
     </div>
   );

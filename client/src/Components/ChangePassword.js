@@ -8,6 +8,7 @@ const ChangePassword = () => {
   const [message, setMessage] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
   const navigate = useNavigate();
+  const serverUrl = process.env.REACT_APP_SERVER_URL;
 
   const handleChangePassword = async (e) => {
     e.preventDefault();
@@ -20,7 +21,7 @@ const ChangePassword = () => {
 
     try {
       const response = await axios.patch(
-        "http://localhost:8000/api/v1/users/changePassword",
+        `${serverUrl}/api/v1/users/changePassword`,
         {
           password,
         },

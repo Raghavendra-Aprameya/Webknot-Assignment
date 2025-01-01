@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Modal, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+const serverUrl = process.env.REACT_APP_SERVER_URL;
 
 export default function AttendeeManagementPage() {
   const [attendees, setAttendees] = useState([]);
@@ -14,9 +15,7 @@ export default function AttendeeManagementPage() {
     const getAttendees = async () => {
       setIsLoading(true);
       try {
-        const response = await axios.get(
-          "http://localhost:8000/api/v1/attendee"
-        );
+        const response = await axios.get(`${serverUrl}/api/v1/attendee`);
         if (response.data.success) {
           setAttendees(response.data.data);
         }
@@ -31,12 +30,9 @@ export default function AttendeeManagementPage() {
   const addAttendee = async () => {
     setIsLoading(true);
     try {
-      const response = await axios.post(
-        "http://localhost:8000/api/v1/attendee",
-        {
-          name,
-        }
-      );
+      const response = await axios.post(`${serverUrl}/api/v1/attendee`, {
+        name,
+      });
       if (response.data.success) {
         setAttendees((prevAttendees) => [...prevAttendees, response.data.data]);
         setIsOpen(false);
@@ -52,12 +48,10 @@ export default function AttendeeManagementPage() {
     setIsLoading(true); // Start loading
     try {
       const response = await axios.delete(
-        `http://localhost:8000/api/v1/attendee/${attendee_id}`
+        `${serverUrl}/api/v1/attendee/${attendee_id}`
       );
       if (response.data.success) {
-        const response = await axios.get(
-          "http://localhost:8000/api/v1/attendee"
-        );
+        const response = await axios.get(`${serverUrl}/api/v1/attendee`);
         if (response.data.success) {
           setAttendees(response.data.data);
         }
@@ -71,12 +65,9 @@ export default function AttendeeManagementPage() {
   const handleLogout = async () => {
     setIsLoading(true);
     try {
-      const response = await axios.get(
-        "http://localhost:8000/api/v1/users/logout",
-        {
-          withCredentials: true,
-        }
-      );
+      const response = await axios.get(`${serverUrl}/api/v1/users/logout`, {
+        withCredentials: true,
+      });
 
       if (response.data.success) {
         alert(response.data.message);
