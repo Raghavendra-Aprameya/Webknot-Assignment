@@ -3,7 +3,7 @@ const {
   getAllAttendees,
   addAttendee,
   deleteAttendee,
-} = require("../controllers/AttendeeController.js");
+} = require("../controllers/attendeeController.js");
 
 const router = express.Router();
 
