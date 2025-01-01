@@ -1,5 +1,5 @@
 const { PrismaClient } = require("@prisma/client");
-const { eventSchema, updateSchema } = require("../utils/EventSchemas");
+const { eventSchema, updateSchema } = require("../utils/EventSchemas.js");
 const z = require("zod");
 
 const prisma = new PrismaClient();

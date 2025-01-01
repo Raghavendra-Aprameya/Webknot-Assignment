@@ -1,6 +1,6 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
-const { addSchema } = require("../utils/AttendeeSchema");
+const { addSchema } = require("../utils/AttendeeSchema.js");
 const z = require("zod");
 
 const getAllAttendees = async (req, res) => {

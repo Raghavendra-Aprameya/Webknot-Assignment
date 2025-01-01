@@ -1,5 +1,5 @@
 const { PrismaClient } = require("@prisma/client");
-const { addSchema, updateSchema } = require("../utils/TaskSchema");
+const { addSchema, updateSchema } = require("../utils/taskSchema.js");
 const z = require("zod");
 
 const prisma = new PrismaClient();
