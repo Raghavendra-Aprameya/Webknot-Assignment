@@ -16,7 +16,7 @@ This repository contains the submission for the Webknot assignment. The project 
 - **Frontend**: React.js
 - **Styling**: Tailwind CSS, Bootstrap
 - **Backend**: Node.js, Express.js (for API)
-- **Database**: MongoDB (if applicable)
+- **Database**: PostgreSQL
 - **Utilities**: Axios for HTTP requests, date-fns for date manipulation
 
 ## Setup Instructions
@@ -35,17 +35,22 @@ Ensure you have the following installed:
 
 2. Navigate to the project directory:
 cd webknot-assignment
-3. Install dependencies:
+
+4. Install dependencies:
 npm install
 or
 yarn install
+
 ### Running the Project
+
 1. Start the development server:
 npm start
 or
 yarn start
-2. Open your browser and navigate to:
+
+3. Open your browser and navigate to:
 http://localhost:3000
+
 ### Backend Setup
 If the backend is included in this repository:
 
