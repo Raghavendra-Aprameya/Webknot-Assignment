@@ -20,21 +20,21 @@ app.use(cookieParser());
 app.use(express.json());
 
 app.get("/", (req, res) => {
-  res.send("hdsh");
+  res.send("Server Check");
 });
 
-// const taskRoute = require("./routes/taskRouter");
-// app.use("/api/v1/task", taskRoute);
+const taskRoute = require("./routes/taskRouter");
+app.use("/api/v1/task", taskRoute);
 
-// const eventRoute = require("./routes/eventRouter");
-// app.use("/api/v1/event", eventRoute);
+const eventRoute = require("./routes/eventRouter");
+app.use("/api/v1/event", eventRoute);
 
-// const attendeeRoute = require("./routes/attendeeRouter");
-// app.use("/api/v1/attendee", attendeeRoute);
+const attendeeRoute = require("./routes/attendeeRouter");
+app.use("/api/v1/attendee", attendeeRoute);
 
-// const userRoutes = require("./routes/userRouter");
+const userRoutes = require("./routes/userRouter");
 
-// app.use("/api/v1/users", userRoutes);
+app.use("/api/v1/users", userRoutes);
 
 app.use((err, req, res, next) => {
   console.error(err.stack);
