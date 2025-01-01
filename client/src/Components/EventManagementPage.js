@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { format, startOfMonth, endOfMonth, eachDayOfInterval } from "date-fns";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Modal, Button } from "react-bootstrap";
 
 export default function EventManagement() {
@@ -10,6 +10,7 @@ export default function EventManagement() {
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [isOpen, setIsOpen] = useState(false);
   const [isUpdateOpen, setIsUpdateOpen] = useState(false);
+  const navigate = useNavigate();
   const [error, setError] = useState("");
   const [addEvent, setAddEvent] = useState({
     name: "",
@@ -23,16 +24,20 @@ export default function EventManagement() {
     location: "",
     date: "",
   });
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const getEvents = async () => {
       try {
+        setLoading(true); // Start loading
         const response = await axios.get("http://localhost:8000/api/v1/event");
         const fetchedEvents = response.data?.data || [];
         setEvents(fetchedEvents);
       } catch (error) {
         console.error("Error fetching events:", error);
         setEvents([]);
+      } finally {
+        setLoading(false);
       }
     };
     getEvents();
@@ -150,9 +155,46 @@ export default function EventManagement() {
     }
   };
 
+  const handleLogout = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:8000/api/v1/users/logout",
+        {
+          withCredentials: true,
+        }
+      );
+
+      if (response.data.success) {
+        alert(response.data.message);
+        navigate("/");
+      } else {
+        alert("Failed to log out. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error during logout:", error);
+      alert("An error occurred. Please try again.");
+    }
+  };
+
   return (
-    <div className="p-4">
+    <div className="relative p-4">
+      {/* Logout Button at top-right */}
+      <button
+        onClick={handleLogout}
+        className="absolute top-4 right-4 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700"
+      >
+        Logout
+      </button>
+
       <h1 className="text-xl font-bold mb-4">Event Calendar</h1>
+
+      {/* Loader */}
+      {loading && (
+        <div className="text-center py-6">
+          <div className="animate-spin border-t-4 border-blue-600 w-12 h-12 rounded-full mx-auto"></div>
+          <p>Loading events...</p>
+        </div>
+      )}
 
       <div className="mb-4 flex justify-between items-center flex-wrap">
         <button
@@ -258,6 +300,7 @@ export default function EventManagement() {
         Add Event
       </button>
 
+      {/* Add Event Modal */}
       <Modal show={isOpen} onHide={() => setIsOpen(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Add Event</Modal.Title>
@@ -274,19 +317,14 @@ export default function EventManagement() {
               }
               className="w-full mb-2 p-2 border"
             />
-          </div>
-          <div>
             <label>Enter Description:</label>
-            <input
-              type="text"
+            <textarea
               value={addEvent.description}
               onChange={(e) =>
                 setAddEvent({ ...addEvent, description: e.target.value })
               }
               className="w-full mb-2 p-2 border"
             />
-          </div>
-          <div>
             <label>Enter Location:</label>
             <input
               type="text"
@@ -296,9 +334,7 @@ export default function EventManagement() {
               }
               className="w-full mb-2 p-2 border"
             />
-          </div>
-          <div>
-            <label>Enter Date:</label>
+            <label>Event Date:</label>
             <input
               type="date"
               value={addEvent.date}
@@ -310,10 +346,16 @@ export default function EventManagement() {
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={addNewEvent}>Add Event</Button>
+          <Button variant="secondary" onClick={() => setIsOpen(false)}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={addNewEvent}>
+            Add Event
+          </Button>
         </Modal.Footer>
       </Modal>
 
+      {/* Update Event Modal */}
       <Modal show={isUpdateOpen} onHide={() => setIsUpdateOpen(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Update Event</Modal.Title>
@@ -327,19 +369,14 @@ export default function EventManagement() {
               onChange={(e) => handleUpdateEventChange("name", e.target.value)}
               className="w-full mb-2 p-2 border"
             />
-          </div>
-          <div>
             <label>Enter Description:</label>
-            <input
-              type="text"
+            <textarea
               value={updateEvent.description}
               onChange={(e) =>
                 handleUpdateEventChange("description", e.target.value)
               }
               className="w-full mb-2 p-2 border"
             />
-          </div>
-          <div>
             <label>Enter Location:</label>
             <input
               type="text"
@@ -349,9 +386,7 @@ export default function EventManagement() {
               }
               className="w-full mb-2 p-2 border"
             />
-          </div>
-          <div>
-            <label>Enter Date:</label>
+            <label>Event Date:</label>
             <input
               type="date"
               value={updateEvent.date}
@@ -361,20 +396,17 @@ export default function EventManagement() {
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={() => handleUpdateEvent(updateEvent.event_id)}>
-            Save
+          <Button variant="secondary" onClick={() => setIsUpdateOpen(false)}>
+            Close
+          </Button>
+          <Button
+            variant="primary"
+            onClick={() => handleUpdateEvent(updateEvent.event_id)}
+          >
+            Update Event
           </Button>
         </Modal.Footer>
       </Modal>
-
-      <div className="mb-4 flex justify-end">
-        <Link
-          to="/attendee"
-          className="px-4 py-2 bg-green-600 text-white rounded"
-        >
-          Check out Attendees
-        </Link>
-      </div>
     </div>
   );
 }

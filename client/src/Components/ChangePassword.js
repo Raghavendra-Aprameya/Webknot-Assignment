@@ -12,7 +12,6 @@ const ChangePassword = () => {
   const handleChangePassword = async (e) => {
     e.preventDefault();
 
-    // Basic validation for matching passwords
     if (password !== confirmPassword) {
       setMessage("Passwords do not match.");
       setIsSuccess(false);

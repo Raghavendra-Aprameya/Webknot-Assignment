@@ -9,6 +9,8 @@ import ForgotPassword from "./Components/ForgotPassword";
 import OtpVerification from "./Components/OtpVerification";
 import ChangePassword from "./Components/ChangePassword";
 import axios from "axios";
+import LandingPage from "./Components/Landing";
+
 export default function App() {
   axios.defaults.withCredentials = true;
 
@@ -27,6 +29,7 @@ export default function App() {
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/otp-verification" element={<OtpVerification />} />
           <Route path="/change-password" element={<ChangePassword />} />
+          <Route path="/landing" element={<LandingPage />} />
         </Routes>
       </BrowserRouter>
     </>

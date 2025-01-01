@@ -1,14 +1,18 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Modal, Button } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 
 export default function AttendeeManagementPage() {
   const [attendees, setAttendees] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const [name, setName] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const getAttendees = async () => {
+      setIsLoading(true);
       try {
         const response = await axios.get(
           "http://localhost:8000/api/v1/attendee"
@@ -19,11 +23,13 @@ export default function AttendeeManagementPage() {
       } catch (error) {
         console.error("Error fetching attendees:", error);
       }
+      setIsLoading(false);
     };
     getAttendees();
   }, []);
 
   const addAttendee = async () => {
+    setIsLoading(true);
     try {
       const response = await axios.post(
         "http://localhost:8000/api/v1/attendee",
@@ -39,9 +45,11 @@ export default function AttendeeManagementPage() {
     } catch (error) {
       console.error("Error adding attendee:", error);
     }
+    setIsLoading(false);
   };
 
   const deleteAttendee = async (attendee_id) => {
+    setIsLoading(true); // Start loading
     try {
       const response = await axios.delete(
         `http://localhost:8000/api/v1/attendee/${attendee_id}`
@@ -57,10 +65,49 @@ export default function AttendeeManagementPage() {
     } catch (err) {
       console.error(err);
     }
+    setIsLoading(false);
+  };
+
+  const handleLogout = async () => {
+    setIsLoading(true);
+    try {
+      const response = await axios.get(
+        "http://localhost:8000/api/v1/users/logout",
+        {
+          withCredentials: true,
+        }
+      );
+
+      if (response.data.success) {
+        alert(response.data.message);
+        navigate("/");
+      } else {
+        alert("Failed to log out. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error during logout:", error);
+      alert("An error occurred. Please try again.");
+    }
+    setIsLoading(false);
   };
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
+      {/* Loader */}
+      {isLoading && (
+        <div className="flex justify-center items-center fixed top-0 left-0 w-full h-full bg-gray-200 bg-opacity-50 z-10">
+          <div className="animate-spin border-t-4 border-blue-500 border-solid w-16 h-16 rounded-full"></div>
+        </div>
+      )}
+
+      {/* Logout Button at top-right */}
+      <button
+        onClick={handleLogout}
+        className="absolute top-4 right-4 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700"
+      >
+        Logout
+      </button>
+
       <h1 className="text-3xl font-bold mb-6 text-center text-gray-800">
         Attendee Management
       </h1>

@@ -18,7 +18,7 @@ const Login = () => {
       );
       if (response.data.success) {
         setMessage("Login Successful");
-        navigate("/event");
+        navigate("/landing");
       } else {
         setMessage(response.data.message);
       }
