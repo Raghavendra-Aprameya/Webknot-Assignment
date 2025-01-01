@@ -15,6 +15,10 @@ app.use(
 app.use(cookieParser());
 app.use(express.json());
 
+app.get("/", (req, res) => {
+  res.send("hdsh");
+});
+
 const taskRoute = require("./routes/taskRouter");
 app.use("/api/v1/task", taskRoute);
 
@@ -27,9 +31,7 @@ app.use("/api/v1/attendee", attendeeRoute);
 const userRoutes = require("./routes/userRouter");
 
 app.use("/api/v1/users", userRoutes);
-app.get("/", (req, res) => {
-  res.send("hdsh");
-});
+
 app.use((err, req, res, next) => {
   console.error(err.stack);
 
