@@ -63,18 +63,21 @@ Fetch all events.
 
 2. POST /api/v1/event
 Add a new event.
+
 Required fields:
 
-name
-description
-location
-date
-Contact
+name,
+description,
+location,
+date,
+Contact,
 
 For any questions or feedback, feel free to reach out:
 
 Email: 1rn21cs030.aprameya@gmail.com
+
 LinkedIn:(https://www.linkedin.com/in/aprameya-r-a94a43255/)
+
 Thank you for checking out this project!
 
 
