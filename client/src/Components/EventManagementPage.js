@@ -91,7 +91,7 @@ export default function EventManagement() {
         return;
       }
 
-      const response = await axios.post(`${serverUrl}0/api/v1/event/`, {
+      const response = await axios.post(`${serverUrl}/api/v1/event/`, {
         name: addEvent.name,
         description: addEvent.description,
         location: addEvent.location,
