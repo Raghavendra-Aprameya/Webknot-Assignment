@@ -7,7 +7,11 @@ const app = express();
 
 app.use(
   cors({
-    origin: ["http://localhost:3000", `${process.env.CLIENT_URL}`],
+    origin: [
+      "http://localhost:3000",
+      `${process.env.CLIENT_URL}`,
+      "https://webknot-assignment-frontend.vercel.app",
+    ],
     credentials: true,
   })
 );
